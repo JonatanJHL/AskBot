@@ -1,48 +1,28 @@
-# Bot IA - Landing Page de Ventas
+# AskBot - Landing Page
+
+Página web pública para mostrar AskBot.
 
 ## Archivos
 
-- `index.html` - Página de ventas
-- `send-email.php` - Backend para enviar emails
+- `index.html` - Landing page pública
+- `send-email.php` - Formulario de contacto (opcional)
 - `composer.json` - Dependencias (PHPMailer)
 
-## Instalación
+## Uso
+
+Simplemente abre `index.html` en un navegador o súbelo a tu servidor.
+
+## Formulario de Contacto (Opcional)
+
+Si quieres el formulario de contacto funcional:
 
 ```bash
-# Instalar dependencias
 composer install
 ```
 
-## Configuración SMTP
-
-Edita `send-email.php` con tus credenciales:
+Edita `send-email.php` con tu SMTP:
 
 ```php
-$mail->Host       = 'smtp.gmail.com';        // Tu servidor SMTP
-$mail->Username   = 'tu-email@gmail.com';     // Tu email
-$mail->Password   = 'xxxx xxxx xxxx xxxx';   // App password de Gmail
+$mail->Username = 'tu-email@gmail.com';
+$mail->Password = 'app_password';
 ```
-
-### Gmail App Password
-
-1. Ve a [myaccount.google.com](https://myaccount.google.com)
-2. Seguridad → Verificación en 2 pasos → Activala
-3. Seguridad → Contraseñas de aplicaciones → Genera una
-4. Usa esa contraseña de 16 caracteres
-
-### Otros SMTP
-
-Puedes usar Mailtrap, SendGrid, Amazon SES, etc.
-
-## Uso LOCAL (XAMPP/MAMP)
-
-```bash
-# En tu servidor local
-http://localhost/bot-ia-ventas/
-```
-
-## Subir a producción
-
-1. Sube todos los archivos al hosting
-2. Configura el SMTP en send-email.php
-3. Listo → Los formularios enviarán emails
