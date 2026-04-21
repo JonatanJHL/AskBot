@@ -1,0 +1,10 @@
+{
+    "name": "bot-ia/ventas",
+    "description": "Bot IA - Landing Page con envío de emails",
+    "require": {
+        "phpmailer/phpmailer": "^6.9"
+    },
+    "autoload": {
+        "classmap": ["."]
+    }
+}

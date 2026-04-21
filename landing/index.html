@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AskBot - Asistente de IA Open Source</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #64748b;
+            --bg: #0f172a;
+            --bg-card: #1e293b;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+        }
+        .logo span { color: var(--primary); }
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 30px;
+            transition: color 0.3s;
+        }
+        nav a:hover { color: var(--primary); }
+        .hero {
+            padding: 140px 0 80px;
+            text-align: center;
+            background: radial-gradient(ellipse at top, rgba(59, 130, 246, 0.15) 0%, transparent 60%);
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+        .badgeOSS {
+            display: inline-block;
+            background: var(--success);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(59, 130, 246, 0.4);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            margin-left: 15px;
+        }
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        .features {
+            padding: 80px 0;
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .section-title p {
+            color: var(--text-muted);
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .feature-card {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+        }
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        .tech {
+            padding: 80px 0;
+            background: var(--bg-card);
+        }
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+        .tech-item {
+            padding: 20px;
+        }
+        .tech-item h4 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        .tech-item p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .demo {
+            padding: 80px 0;
+        }
+        .demo-chat {
+            background: var(--bg);
+            border-radius: 16px;
+            max-width: 500px;
+            margin: 0 auto;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .demo-header {
+            padding: 20px;
+            background: var(--gradient);
+            text-align: center;
+        }
+        .demo-messages {
+            height: 300px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .demo-msg {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 16px;
+            max-width: 80%;
+        }
+        .demo-msg.bot {
+            background: var(--bg-card);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .demo-msg.user {
+            background: var(--primary);
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+        .demo-input {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .demo-input input {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 25px;
+            background: var(--bg-card);
+            color: var(--text);
+            outline: none;
+        }
+        .demo-input button {
+            margin-left: 10px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+        }
+        .install {
+            padding: 80px 0;
+            background: var(--bg-card);
+        }
+        .code-block {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: "Fira Code", monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .code-block .comment { color: var(--text-muted); }
+        .code-block .cmd { color: #fb923c; }
+        .contact {
+            padding: 80px 0;
+        }
+        .contact-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+        }
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        footer p {
+            color: var(--text-muted);
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .btn { display: block; width: 100%; margin: 10px 0; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="#" class="logo">🤖 AskBot <span>Open Source</span></a>
+            <nav>
+                <a href="#features">Características</a>
+                <a href="#tech">Tecnologías</a>
+                <a href="#install">Instalar</a>
+                <a href="#contact">Contacto</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <span class="badgeOSS">MIT License - 100% Gratis</span>
+            <h1>Tu Asistente de IA<br><span>para tu Base de Datos</span></h1>
+            <p>Pregunta a tu base de datos en lenguaje natural. Sin SQL, sin conocimientos técnicos. Open Source y configurable.</p>
+            <a href="#install" class="btn btn-primary">Instalar Gratis</a>
+            <a href="https://github.com/JonatanJHL" class="btn btn-outline">Ver en GitHub</a>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>¿Qué puede hacer AskBot?</h2>
+                <p>Todo lo que necesitas para automatizar atención</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>NLP a SQL</h3>
+                    <p>Pregunta en español y el bot genera las consultas automáticamente. "¿Cuántos clientes tenemos?" → SQL.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🗄️</div>
+                    <h3>Tu Base de Datos</h3>
+                    <p>Se adapta automáticamente a tu estructura. Configura qué tablas puede consultar.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Multi-Canal</h3>
+                    <p>Web, WhatsApp y Telegram en un solo asistente. Tus clientes te contactan dondeprefieran.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎫</div>
+                    <h3>Escalamiento</h3>
+                    <p>Cuando el bot no puede, crea un ticket para que un humano atienda.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Open Source</h3>
+                    <p>MIT License. Código libre, sin pagos, sin licencias. Haz lo que quieras.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🖥️</div>
+                    <h3>Auto-Hospedable</h3>
+                    <p>Tu servidor, tu control. Sin depender de servicios externos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tech" class="tech">
+        <div class="container">
+            <div class="section-title">
+                <h2>Tecnologías</h2>
+                <p>Stack moderno y robusto</p>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <h4>PHP 8.0+</h4>
+                    <p>Backend</p>
+                </div>
+                <div class="tech-item">
+                    <h4>MySQL</h4>
+                    <p>Base de datos</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Ollama</h4>
+                    <p>IA Local</p>
+                </div>
+                <div class="tech-item">
+                    <h4>MediaWiki</h4>
+                    <p>OpenAI</p>
+                </div>
+                <div class="tech-item">
+                    <h4>Anthropic</h4>
+                    <p>Claude</p>
+                </div>
+                <div class="tech-item">
+                    <h4>REST API</h4>
+                    <p>Integración</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="demo" class="demo">
+        <div class="container">
+            <div class="section-title">
+                <h2>Prueba la Experiencia</h2>
+                <p>Así de fácil es usar AskBot</p>
+            </div>
+            <div class="demo-chat">
+                <div class="demo-header">
+                    <strong>🤖 AskBot Demo</strong>
+                </div>
+                <div class="demo-messages" id="demoMessages">
+                    <div class="demo-msg bot">¡Hola! Soy AskBot. ¿En qué puedo ayudarte hoy?</div>
+                </div>
+                <div class="demo-input">
+                    <input type="text" id="demoInput" placeholder="Escribe tu mensaje...">
+                    <button onclick="demoSend()">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="install" class="install">
+        <div class="container">
+            <div class="section-title">
+                <h2>Instalación</h2>
+                <p>Rápido y sencillo</p>
+            </div>
+            
+            <div class="code-block">
+                <span class="comment"># 1. Clonar el proyecto</span><br>
+                <span class="cmd">git clone</span> https://github.com/JonatanJHL/askbot.git<br>
+                <span class="cmd">cd</span> askbot
+            </div>
+            
+            <div class="code-block">
+                <span class="comment"># 2. Instalar dependencias</span><br>
+                <span class="cmd">composer</span> install
+            </div>
+            
+            <div class="code-block">
+                <span class="comment"># 3. Importar base de datos</span><br>
+                <span class="cmd">mysql</span> -u root -p askbot &lt; core/database.sql
+            </div>
+            
+            <div class="code-block">
+                <span class="comment"># 4. Configurar (copia config.example.php a config.php)</span>
+            </div>
+            
+            <div class="code-block">
+                <span class="comment"># 5. Ejecutar</span><br>
+                <span class="cmd">php</span> -S localhost:8000 -t public
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="https://github.com/JonatanJHL" class="btn btn-primary">Ver en GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>Contacto</h2>
+                <p>¿Tienes preguntas? ¿Necesitas ayuda?</p>
+            </div>
+            <form class="contact-form" action="mailto:jonatanhidalgoledesma@gmail.com" method="post" enctype="text/plain">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" name="nombre" required placeholder="Tu nombre">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required placeholder="tu@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Mensaje</label>
+                    <textarea name="mensaje" placeholder="¿En qué puedo ayudarte?"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%">Enviar Mensaje</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 AskBot Open Source. Desarrollado por Jonatan Hidalgo.</p>
+            <p style="margin-top: 10px;">
+                <a href="https://github.com/JonatanJHL" style="color: var(--primary);">GitHub</a> · 
+                <a href="mailto:jonatanhidalgoledesma@gmail.com" style="color: var(--primary);">Email</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        const messages = [
+            { q: "¿Cuántos servicios activos tenemos?", a: "Tienes 247 servicios activos en la base de datos." },
+            { q: "¿Quién es el cliente más grande?", a: "El cliente con mayor facturación es CLIENTE S.A. con $1.2M acumulados." },
+            { q: "¿Tengo facturas pendientes?", a: "Sí, tienes 23 facturas pendientes por $156,000 MXN." },
+            { q: "cómo doy de alta un cliente?", a: "Usa el panel de admin o contacta a soporte." },
+            { q: "hola", a: "¡Hola! Soy el asistente demo. ¿En qué puedo ayudarte?" }
+        ];
+
+        function demoSend() {
+            const input = document.getElementById('demoInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const container = document.getElementById('demoMessages');
+            container.innerHTML += '<div class="demo-msg user">' + text + '</div>';
+
+            const response = messages.find(m => text.toLowerCase().includes(m.q.toLowerCase()));
+            setTimeout(() => {
+                container.innerHTML += '<div class="demo-msg bot">' + (response ? response.a : "Entiendo tu pregunta. Instala AskBot en tu servidor para probarlo con tus datos.") + '</div>';
+                container.scrollTop = container.scrollHeight;
+            }, 800);
+
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
+        }
+
+        document.getElementById('demoInput').addEventListener('keypress', e => {
+            if (e.key === 'Enter') demoSend();
+        });
+    </script>
+</body>
+</html>

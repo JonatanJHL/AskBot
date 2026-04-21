@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AskBot Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #3b82f6;
+            --bg: #0f172a;
+            --bg-card: #1e293b;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background: var(--bg-card);
+            padding: 20px;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+        .sidebar h2 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+        .sidebar nav a {
+            display: block;
+            padding: 12px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+        .sidebar nav a:hover, .sidebar nav a.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+        }
+        .main {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .header h1 { font-size: 1.8rem; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .stat-card .label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+        .stat-card.success .value { color: var(--success); }
+        .card {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 25px;
+        }
+        .card h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        th {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        .badge.success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .badge.warning { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .badge.danger { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn.danger { background: var(--danger); }
+        .btn.success { background: var(--success); }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-muted);
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px 15px;
+            background: var(--bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--text);
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .tab.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        .hidden { display: none; }
+        .chart {
+            height: 200px;
+            background: var(--bg);
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+            gap: 10px;
+        }
+        .chart-bar {
+            flex: 1;
+            background: var(--primary);
+            border-radius: 4px 4px 0 0;
+            min-height: 10px;
+        }
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .alert.info {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>🤖 AskBot</h2>
+        <nav>
+            <a href="#" class="active" onclick="showPage('dashboard')">Dashboard</a>
+            <a href="#" onclick="showPage('conversaciones')">Conversaciones</a>
+            <a href="#" onclick="showPage('escalamientos')">Tickets</a>
+            <a href="#" onclick="showPage('datos')">Mis Datos</a>
+            <a href="#" onclick="showPage('config')">Configuración</a>
+        </nav>
+    </div>
+
+    <div class="main">
+        <div class="header">
+            <h1>Dashboard</h1>
+            <div>
+                <span id="companyName">Mi Empresa</span>
+            </div>
+        </div>
+
+        <div id="page-dashboard">
+            <div class="alert info">
+                <strong>AskBot Open Source</strong>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="label">Conversaciones Hoy</div>
+                    <div class="value" id="statConversaciones">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Mensajes Totales</div>
+                    <div class="value" id="statMensajes">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Tickets Abiertos</div>
+                    <div class="value" id="statEscalamientos">0</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="label">Estado</div>
+                    <div class="value" id="statLicencia">Activo</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Últimos 7 días</h3>
+                <div class="chart" id="chart"></div>
+            </div>
+
+            <div class="card">
+                <h3>Conversaciones Recientes</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Canal</th>
+                            <th>Mensaje</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentConversations"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="page-conversaciones" class="hidden">
+            <div class="card">
+                <h3>Todas las Conversaciones</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Canal</th>
+                            <th>Session</th>
+                            <th>Mensaje</th>
+                            <th>Respuesta</th>
+                        </tr>
+                    </thead>
+                    <tbody id="allConversations"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="page-escalamientos" class="hidden">
+            <div class="card">
+                <h3>Tickets de Soporte</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Pregunta</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="escalamientosList"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="page-datos" class="hidden">
+            <div class="card">
+                <h3>Tablas de mi Base de Datos</h3>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">
+                    Configura qué tablas puede consultar el bot
+                </p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tabla</th>
+                            <th>Alias</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablasList"></tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>Agregar Tabla</h3>
+                <div class="form-group">
+                    <label>Nombre de la tabla en MySQL</label>
+                    <input type="text" id="newTabla" placeholder="empleados">
+                </div>
+                <div class="form-group">
+                    <label>Alias (nombre amigable)</label>
+                    <input type="text" id="newAlias" placeholder="Empleados">
+                </div>
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <input type="text" id="newDesc" placeholder="Tabla de empleados de la empresa">
+                </div>
+                <button class="btn success" onclick="addTabla()">Agregar Tabla</button>
+            </div>
+
+            <div class="card">
+                <h3>Ver Datos de una Tabla</h3>
+                <div class="form-group">
+                    <label>Seleccionar tabla</label>
+                    <select id="verTabla">
+                        <option value="">Selecciona...</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="verDatosTabla()">Ver Datos</button>
+            </div>
+
+            <div class="card hidden" id="datosTablaCard">
+                <h3 id="datosTablaTitulo">Datos</h3>
+                <div style="overflow-x: auto;">
+                    <table id="datosTablaTable"></table>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-config" class="hidden">
+            <div class="card">
+                <h3>Configuración General</h3>
+                <div class="form-group">
+                    <label>Nombre de Empresa</label>
+                    <input type="text" id="confEmpresa">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="confEmail">
+                </div>
+                <button class="btn" onclick="saveConfig()">Guardar</button>
+            </div>
+
+            <div class="card">
+                <h3>Configuración de IA</h3>
+                <div class="form-group">
+                    <label>Proveedor de IA</label>
+                    <select id="confIAProvider">
+                        <option value="ollama">Ollama (Local - Gratis)</option>
+                        <option value="openrouter">OpenRouter (Cloud)</option>
+                        <option value="anthropic">Anthropic (Cloud)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Modelo</label>
+                    <input type="text" id="confIAModel" placeholder="llama3">
+                </div>
+                <div class="form-group">
+                    <label>Endpoint (para Ollama)</label>
+                    <input type="text" id="confIEndpoint" placeholder="http://localhost:11434">
+                </div>
+                <button class="btn" onclick="saveIAConfig()">Guardar</button>
+            </div>
+
+            <div class="card">
+                <h3>Canales</h3>
+                <div class="tabs">
+                    <button class="tab active" onclick="selectChannel('web')">Web</button>
+                    <button class="tab" onclick="selectChannel('whatsapp')">WhatsApp</button>
+                    <button class="tab" onclick="selectChannel('telegram')">Telegram</button>
+                </div>
+                <div class="form-group">
+                    <label>Token / Webhook URL</label>
+                    <input type="text" id="confWebhook" placeholder="Token o URL">
+                </div>
+                <button class="btn" onclick="saveChannel()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = './api.php';
+        const empresaId = 1;
+
+        async function api(endpoint, options = {}) {
+            const response = await fetch(API_URL + endpoint, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer open',
+                    ...options.headers
+                }
+            });
+            return response.json();
+        }
+
+        async function loadDashboard() {
+            try {
+                const stats = await api('/stats') || [];
+                const licencia = await api('/licencia/open') || { empresa_nombre: 'Mi Empresa' };
+
+                document.getElementById('companyName').textContent = licencia.empresa_nombre;
+                document.getElementById('statConversaciones').textContent = stats.reduce((a, b) => a + (b.conversaciones || 0), 0);
+                document.getElementById('statMensajes').textContent = stats.reduce((a, b) => a + (b.mensajes || 0), 0);
+                document.getElementById('statEscalamientos').textContent = stats.reduce((a, b) => a + (b.escalamientos || 0), 0);
+
+                const chart = document.getElementById('chart');
+                chart.innerHTML = '';
+                (stats || []).slice(0, 7).reverse().forEach(d => {
+                    const bar = document.createElement('div');
+                    bar.className = 'chart-bar';
+                    bar.style.height = Math.max(10, (d.mensajes || 0) * 5) + 'px';
+                    bar.title = d.fecha + ': ' + (d.mensajes || 0) + ' msgs';
+                    chart.appendChild(bar);
+                });
+            } catch (e) {
+                console.log('Cargando datos...');
+            }
+        }
+
+        async function loadConversaciones() {
+            try {
+                const data = await api('/conversaciones') || [];
+                const html = data.slice(0, 10).map(c => `
+                    <tr>
+                        <td>${new Date(c.created_at).toLocaleString()}</td>
+                        <td>${c.canal}</td>
+                        <td>${(c.mensaje || '').substring(0, 50)}...</td>
+                        <td><span class="badge ${c.escalated ? 'warning' : 'success'}">${c.escalated ? 'Escalado' : 'Normal'}</span></td>
+                    </tr>
+                `).join('');
+                document.getElementById('recentConversations').innerHTML = html || '<tr><td colspan="4">Sin conversaciones aún</td></tr>';
+                document.getElementById('allConversations').innerHTML = html || '<tr><td colspan="5">Sin conversaciones aún</td></tr>';
+            } catch (e) {
+                console.log('Error cargando conversaciones');
+            }
+        }
+
+        async function loadEscalamientos() {
+            try {
+                const data = await api('/escalamientos') || [];
+                const html = data.map(e => `
+                    <tr>
+                        <td>${new Date(e.created_at).toLocaleString()}</td>
+                        <td>${(e.pregunta || '').substring(0, 50)}...</td>
+                        <td><span class="badge ${e.estado === 'pendiente' ? 'warning' : 'success'}">${e.estado}</span></td>
+                        <td><button class="btn" onclick="atenderEscalamiento(${e.id})">Marcar Atendido</button></td>
+                    </tr>
+                `).join('');
+                document.getElementById('escalamientosList').innerHTML = html || '<tr><td colspan="4">No hay tickets</td></tr>';
+            } catch (e) {
+                console.log('Error cargando escalamientos');
+            }
+        }
+
+        async function loadTablas() {
+            try {
+                const data = await api('/tablas') || [];
+                const html = data.map(t => `
+                    <tr>
+                        <td>${t.tabla_nombre}</td>
+                        <td>${t.tabla_alias || '-'}</td>
+                        <td>${t.tabla_descripcion || '-'}</td>
+                        <td><button class="btn danger" onclick="eliminarTabla(${t.id})">Eliminar</button></td>
+                    </tr>
+                `).join('');
+                document.getElementById('tablasList').innerHTML = html || '<tr><td colspan="4">Sin tablas configuradas</td></tr>';
+                
+                const select = document.getElementById('verTabla');
+                select.innerHTML = '<option value="">Selecciona...</option>' + 
+                    data.map(t => `<option value="${t.tabla_nombre}">${t.tabla_alias || t.tabla_nombre}</option>`).join('');
+            } catch (e) {
+                console.log('Error cargando tablas');
+            }
+        }
+
+        async function verDatosTabla() {
+            const tabla = document.getElementById('verTabla').value;
+            if (!tabla) return;
+
+            try {
+                const data = await api('/datos-tabla?tabla=' + tabla);
+                const html = data.map(row => '<td>' + Object.values(row).join('</td><td>') + '</td>').join('<tr><td>', '</td></tr>');
+                document.getElementById('datosTablaTitulo').textContent = 'Datos: ' + tabla;
+                document.getElementById('datosTablaTable').innerHTML = '<tr>' + html + '</tr>';
+                document.getElementById('datosTablaCard').classList.remove('hidden');
+            } catch (e) {
+                alert('Error al cargar datos');
+            }
+        }
+
+        function showPage(page) {
+            document.querySelectorAll('.main > div').forEach(div => div.classList.add('hidden'));
+            document.getElementById('page-' + page).classList.remove('hidden');
+            document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (page === 'conversaciones') loadConversaciones();
+            if (page === 'escalamientos') loadEscalamientos();
+            if (page === 'datos') loadTablas();
+        }
+
+        async function saveConfig() {
+            alert('Configuración guardada');
+        }
+
+        async function saveIAConfig() {
+            alert('Configuración de IA guardada');
+        }
+
+        async function saveChannel() {
+            alert('Canal guardado');
+        }
+
+        function selectChannel(canal) {
+            document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        async function addTabla() {
+            const tabla = document.getElementById('newTabla').value;
+            const alias = document.getElementById('newAlias').value;
+            const desc = document.getElementById('newDesc').value;
+            
+            if (!tabla) {
+                alert('Ingresa el nombre de la tabla');
+                return;
+            }
+            
+            alert('Tabla agregada: ' + tabla);
+            loadTablas();
+        }
+
+        async function eliminarTabla(id) {
+            if (confirm('¿Eliminar esta tabla?')) {
+                alert('Tabla eliminada');
+                loadTablas();
+            }
+        }
+
+        loadDashboard();
+    </script>
+</body>
+</html>

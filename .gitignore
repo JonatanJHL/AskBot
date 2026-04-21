@@ -1,0 +1,33 @@
+# AskBot - Git Ignore
+
+# Dependencias
+/vendor/
+
+# Configuración local
+/config.php
+/.env
+.env.*
+
+# Cache y logs
+/storage/cache/*
+/storage/logs/*
+*.log
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDE
+.idea/
+.vscode/
+*.sublime-*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tests
+/vendor/bin/.phpunit*
+.phpunit*
