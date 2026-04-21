@@ -59,7 +59,7 @@
 
 ```bash
 # 1. Clonar el proyecto
-git clone https://github.com/tu-usuario/askbot.git
+git clone https://github.com/JonatanJHL/AskBot/askbot.git
 cd askbot
 
 # 2. Instalar dependencias
