@@ -11,7 +11,7 @@
 [![MySQL 5.7+](https://img.shields.io/badge/MySQL-5.7+-4479A1.svg)](https://www.mysql.com/)
 [![Open Source](https://img.shields.io/badge/Open%20Source-Yes-green.svg)](https://opensource.org/)
 
-*Pregunta a tu base de datos en lenguaje natural.*
+*Pregunta a tu base de datos en lenguaje natural. Sin SQL, sin conocimientos técnicos.*
 
 </div>
 
@@ -40,7 +40,6 @@
 | **Multi-Canal** | Web, WhatsApp, Telegram en un solo bot |
 | **Escalamiento** | Transfiere a humano cuando no puede responder |
 | **Auto-Adaptable** | Se adapta automáticamente a tu estructura de BD |
-| **Multi-Idioma** | Soporta múltiples idiomas |
 | **Estadísticas** | Dashboard con métricas de uso |
 | **Open Source** | Código libre, comunidad activa |
 
@@ -59,7 +58,7 @@
 
 ```bash
 # 1. Clonar el proyecto
-git clone https://github.com/JonatanJHL/AskBot/askbot.git
+git clone https://github.com/JonatanJHL/askbot.git
 cd askbot
 
 # 2. Instalar dependencias
@@ -231,9 +230,34 @@ Accede a `/admin/` para:
 
 - 📈 Dashboard con métricas
 - 💬 Ver conversaciones
-- 🎫 Gestionar escalamientos
-- ⚙️ Configurar tablas permitidas
-- 🔑 Gestionar licencias
+- 🎫 Gestionar tickets de soporte
+- 🗄️ Configurar tablas de tu BD
+- 👀 Ver datos de tus tablas
+
+---
+
+## 🗄️ Base de Datos
+
+Al instalar, se crean las siguientes tablas:
+
+| Tabla | Descripción |
+|-------|-------------|
+| `ask_empresa` | Tu empresa (se crea automáticamente) |
+| `ask_tablas_permitidas` | Tablas de tu BD que el bot puede consultar |
+| `ask_conversaciones` | Historial de mensajes |
+| `ask_sessions` | Sesiones de usuarios |
+| `ask_tickets` | Tickets cuando el bot no puede responder |
+| `ask_config` | Configuración del bot |
+| `ask_estadisticas` | Métricas de uso |
+| `ask_canales` | Webhooks (WhatsApp, Telegram) |
+| `ask_usuarios` | Usuarios del panel admin |
+
+### Credenciales por defecto
+
+- **Usuario**: admin
+- **Password**: admin123
+
+> ⚠️ **Cambia la contraseña en producción!**
 
 ---
 
@@ -244,12 +268,13 @@ askbot/
 ├── core/                  # Motor del sistema
 │   ├── AskBot.php        # Clase principal
 │   ├── Database.php      # Conexión BD
-│   ├── Licencia.php     # Sistema de licencias
 │   ├── Canales.php      # Gestión de canales
+│   ├── helpers.php      # Funciones utilitarias
 │   └── api.php          # API REST
 ├── public/              # Archivos públicos
-│   ├── index.php       # Web widget
-│   └── admin/          # Panel admin
+│   └── index.php       # Web widget
+├── admin/              # Panel de administración
+│   └── index.html      # Dashboard
 ├── docs/               # Documentación
 └── database.sql        # Schema de BD
 ```
@@ -294,8 +319,8 @@ Este proyecto está bajo la Licencia MIT - ver [LICENSE](LICENSE) para detalles.
 
 - 💻 GitHub: [github.com/JonatanJHL](https://github.com/JonatanJHL)
 - 📧 Email: jonatanhidalgoledesma@gmail.com
-- 🔗 LinkedIn: [linkedin.com/in/jonatan-joaquin-hidalgo-ledesma](https://linkedin.com/in/jonatan-joaquin-hidalgo-ledesma)
+- 🔗 LinkedIn: [linkedin.com/in/jonatan-joaquin-hidalgo-ledesma](https://www.linkedin.com/in/jonatan-joaquin-hidalgo-ledesma/)
 
-¿Te gusta el proyecto? ¡Danos una ⭐ y contribuye!
+¿Te gusta el proyecto? ¡Da una ⭐ y contribuye!
 
 </div>
