@@ -40,7 +40,6 @@
 | **Multi-Canal** | Web, WhatsApp, Telegram en un solo bot |
 | **Escalamiento** | Transfiere a humano cuando no puede responder |
 | **Auto-Adaptable** | Se adapta automáticamente a tu estructura de BD |
-| **Multi-Idioma** | Soporta múltiples idiomas |
 | **Estadísticas** | Dashboard con métricas de uso |
 | **Open Source** | Código libre, comunidad activa |
 
@@ -59,7 +58,7 @@
 
 ```bash
 # 1. Clonar el proyecto
-git clone https://github.com/tu-usuario/askbot.git
+git clone https://github.com/JonatanJHL/askbot.git
 cd askbot
 
 # 2. Instalar dependencias
@@ -320,8 +319,8 @@ Este proyecto está bajo la Licencia MIT - ver [LICENSE](LICENSE) para detalles.
 
 - 💻 GitHub: [github.com/JonatanJHL](https://github.com/JonatanJHL)
 - 📧 Email: jonatanhidalgoledesma@gmail.com
-- 🔗 LinkedIn: [linkedin.com/in/jonatan-joaquin-hidalgo-ledesma](https://linkedin.com/in/jonatan-joaquin-hidalgo-ledesma)
+- 🔗 LinkedIn: [linkedin.com/in/jonatan-joaquin-hidalgo-ledesma](https://www.linkedin.com/in/jonatan-joaquin-hidalgo-ledesma/)
 
-¿Te gusta el proyecto? ¡Danos una ⭐ y contribuye!
+¿Te gusta el proyecto? ¡Da una ⭐ y contribuye!
 
 </div>

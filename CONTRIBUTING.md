@@ -91,7 +91,6 @@ composer test
 - Usa **PSR-12** como guía de estilo
 - Nombres en inglés para variables y funciones
 - Comenta en español o inglés
-- Tipado estrictos donde sea posible
 
 ### Nomenclatura
 
